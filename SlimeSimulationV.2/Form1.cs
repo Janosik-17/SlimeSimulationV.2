@@ -8,7 +8,7 @@ namespace SlimeSimulationV._2
         // Resolution of the simulation
         private const int WIDTH = 800;
         private const int HEIGHT = 600;
-
+        
         // Mode switching var, and 
         private bool slimeMode = true;
 
