@@ -56,18 +56,35 @@ namespace SlimeSimulationV._2
             if (!simTimer.Enabled)
             {
                 simTimer.Start();
-                // isRunning = true;
+
                 btnStart.Text = "Stop";
-                btnClear.Visible = false;
-                groupBox1.Visible = false;
+
+                // Save the settings to currentSettings
+                sim.currentSettings.SmellDistance = (float)upDownSmellDistance.Value;
+                sim.currentSettings.SmellAngle = (float)upDownSmellAngle.Value;
+                sim.currentSettings.SlimeSpeed = (float)upDownSlimeSpeed.Value;
+                sim.currentSettings.TurningSpeed = (float)upDownTurningSpeed.Value;
+                sim.currentSettings.WigglyPathCoeff = (float)upDownPathRandom.Value;
+                sim.currentSettings.DepositPheromoneAmount = (float)upDownDepositAmount.Value;
+                sim.currentSettings.FoodEmissionStrength = (float)upDownEmisionRate.Value;
+                sim.currentSettings.DecayRate = (float)upDownDecayRate.Value;
+
+                foreach (var control in _stopOnlyControls)
+                {
+                    control.Enabled = false;
+                }
             }
             else if (simTimer.Enabled)
             {
                 simTimer.Stop();
                 // isRunning = false;
                 btnStart.Text = "Start";
-                btnClear.Visible = true;
-                groupBox1.Visible = true;
+                //btnClear.Visible = true;
+                //groupBox1.Visible = true;
+                foreach (var control in _stopOnlyControls)
+                {
+                    control.Enabled = true;
+                }
             }
         }
 
@@ -102,12 +119,11 @@ namespace SlimeSimulationV._2
             if (slimeMode)
             {
                 slimeMode = false;
-                // Debug.WriteLine("Food Mode");
             }
             else
             {
                 slimeMode = true;
-                // Debug.WriteLine("Slime Mode");
+            }
             }
         }
     }
