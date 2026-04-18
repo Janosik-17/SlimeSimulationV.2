@@ -8,7 +8,7 @@ namespace SlimeSimulationV._2
         // Resolution of the simulation
         private const int WIDTH = 800;
         private const int HEIGHT = 600;
-        
+
         // Mode switching var, and 
         private bool slimeMode = true;
 
@@ -16,15 +16,46 @@ namespace SlimeSimulationV._2
         private SlimeSimulation sim = new SlimeSimulation(WIDTH, HEIGHT);
         private SimRenderer renderer;
 
+        // List of buttons to disable when the simulation is running
+        private Control[] _stopOnlyControls { get; set; }
+
         public Form1()
         {
             InitializeComponent();
+
+            // Creates the list once the controlls are initialized
+            _stopOnlyControls = new Control[]
+            {
+                btnClear,
+                btnSaveSettings,
+                btnLoadSettings,
+                radButtonFood,
+                radButtonSlime,
+                upDownDecayRate,
+                upDownDepositAmount,
+                upDownEmisionRate,
+                upDownPathRandom,
+                upDownSlimeSpeed,
+                upDownSmellAngle,
+                upDownSmellDistance,
+                upDownTurningSpeed
+            };
 
             // Sets the renderer to output to pictureBox1
             renderer = new SimRenderer(pictureBox1, WIDTH, HEIGHT);
 
             // Initial render - to display a black screen
             renderer.Render(sim.Field, sim.FoodSources);
+
+            // Set the values in Form1 to the default settings
+            upDownSmellDistance.Value = (decimal)sim.currentSettings.SmellDistance;
+            upDownSmellAngle.Value = (decimal)sim.currentSettings.SmellAngle;
+            upDownSlimeSpeed.Value = (decimal)sim.currentSettings.SlimeSpeed;
+            upDownTurningSpeed.Value = (decimal)sim.currentSettings.TurningSpeed;
+            upDownPathRandom.Value = (decimal)sim.currentSettings.WigglyPathCoeff;
+            upDownDepositAmount.Value = (decimal)sim.currentSettings.DepositPheromoneAmount;
+            upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
+            upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
         }
 
         // WIRING OF THE BUTTONS IN THE WIN FORM
@@ -77,10 +108,9 @@ namespace SlimeSimulationV._2
             else if (simTimer.Enabled)
             {
                 simTimer.Stop();
-                // isRunning = false;
+
                 btnStart.Text = "Start";
-                //btnClear.Visible = true;
-                //groupBox1.Visible = true;
+
                 foreach (var control in _stopOnlyControls)
                 {
                     control.Enabled = true;
@@ -120,10 +150,45 @@ namespace SlimeSimulationV._2
             {
                 slimeMode = false;
             }
+
             else
             {
                 slimeMode = true;
             }
+        }
+
+        private void btnSaveSettings_Click(object sender, EventArgs e)
+        {
+            using SaveFileDialog dialog = new SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json",
+                DefaultExt = "json"
+            };
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                SettingsManager.Save(sim.currentSettings, dialog.FileName);
+        }
+
+        private void btnLoadSettings_Click(object sender, EventArgs e)
+        {
+            using OpenFileDialog dialog = new OpenFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json"
+            };
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                sim.currentSettings = SettingsManager.Load(dialog.FileName);
+
+                // Update form values
+                upDownSmellDistance.Value = (decimal)sim.currentSettings.SmellDistance;
+                upDownSmellAngle.Value = (decimal)sim.currentSettings.SmellAngle;
+                upDownSlimeSpeed.Value = (decimal)sim.currentSettings.SlimeSpeed;
+                upDownTurningSpeed.Value = (decimal)sim.currentSettings.TurningSpeed;
+                upDownPathRandom.Value = (decimal)sim.currentSettings.WigglyPathCoeff;
+                upDownDepositAmount.Value = (decimal)sim.currentSettings.DepositPheromoneAmount;
+                upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
+                upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
             }
         }
     }

@@ -31,7 +31,7 @@ namespace SlimeSimulationV._2
         public List<SlimeAgent> Agents { get; set; }
 
         // Initializes the settings class for the simulation
-        public SimulationSettings settings { get; set; }
+        public SimulationSettings currentSettings { get; set; }
 
         /// <summary>
         /// Slime Simulation constructor
@@ -43,7 +43,7 @@ namespace SlimeSimulationV._2
             Field = new PheromoneField(width, height);
             FoodSources = new List<PointF>();
             Agents = new List<SlimeAgent>();
-            settings = new SimulationSettings();
+            currentSettings = new SimulationSettings();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SlimeSimulationV._2
                 int fy = (int)oat.Y;
                 if (fx >= 0 && fx < Field.Width && fy >= 0 && fy < Field.Height)
                 {
-                    Field.Deposit(fx, fy, settings.FoodEmissionStrength);
+                    Field.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
                 }
             }
 
@@ -69,38 +69,38 @@ namespace SlimeSimulationV._2
             foreach (var slime in Agents)
             {
                 var angleCenter = slime.heading;
-                var angleRight = slime.heading - settings.SmellAngle / 2;
-                var angleLeft = slime.heading + settings.SmellAngle / 2;
+                var angleRight = slime.heading - currentSettings.SmellAngle / 2;
+                var angleLeft = slime.heading + currentSettings.SmellAngle / 2;
 
                 var smellCenter = Field.Smell(
-                    slime.X + (float)Math.Cos(angleCenter) * settings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleCenter) * settings.SmellDistance
+                    slime.X + (float)Math.Cos(angleCenter) * currentSettings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleCenter) * currentSettings.SmellDistance
                     );
 
                 var smellRight = Field.Smell(
-                    slime.X + (float)Math.Cos(angleRight) * settings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleRight) * settings.SmellDistance
+                    slime.X + (float)Math.Cos(angleRight) * currentSettings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleRight) * currentSettings.SmellDistance
                     );
 
                 var smellLeft = Field.Smell(
-                    slime.X + (float)Math.Cos(angleLeft) * settings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleLeft) * settings.SmellDistance
+                    slime.X + (float)Math.Cos(angleLeft) * currentSettings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleLeft) * currentSettings.SmellDistance
                     );
 
                 if (smellLeft > smellRight && smellLeft > smellCenter)
                 {
-                    slime.heading += settings.TurningSpeed;
+                    slime.heading += currentSettings.TurningSpeed;
                 }
                 else if (smellRight > smellLeft && smellRight > smellCenter)
                 {
-                    slime.heading -= settings.TurningSpeed;
+                    slime.heading -= currentSettings.TurningSpeed;
                 }
 
                 // Random wiggle
-                slime.heading += (float)((RNG.NextDouble() - 0.5) * settings.WigglyPathCoeff);
+                slime.heading += (float)((RNG.NextDouble() - 0.5) * currentSettings.WigglyPathCoeff);
 
-                float newX = slime.X + (float)Math.Cos(slime.heading) * settings.SlimeSpeed;
-                float newY = slime.Y + (float)Math.Sin(slime.heading) * settings.SlimeSpeed;
+                float newX = slime.X + (float)Math.Cos(slime.heading) * currentSettings.SlimeSpeed;
+                float newY = slime.Y + (float)Math.Sin(slime.heading) * currentSettings.SlimeSpeed;
 
                 // Wrapping
                 if (newX < 0) { newX = Field.Width - 1; }
@@ -117,12 +117,12 @@ namespace SlimeSimulationV._2
                 int iy = (int)slime.Y;
                 if (ix >= 0 && ix < Field.Width && iy >= 0 && iy < Field.Height)
                 {
-                    Field.Deposit(ix, iy, settings.DepositPheromoneAmount);
+                    Field.Deposit(ix, iy, currentSettings.DepositPheromoneAmount);
                 }           
             }
 
             // Diffuse and decay trail
-            Field.DiffuseAndDecay(settings.DecayRate);
+            Field.DiffuseAndDecay(currentSettings.DecayRate);
 
             // Redraw(); ADD INTO TICK TIMER LOOP
         }
