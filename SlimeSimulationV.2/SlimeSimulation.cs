@@ -30,15 +30,8 @@ namespace SlimeSimulationV._2
         /// </summary>
         public List<SlimeAgent> Agents { get; set; }
 
-        // Simulation parameters 
-        // ADD A WAY TO STORE AND EDIT THESE
-        private float DecayRate { get; set; }
-        private float SmellDistance { get; set; }
-        private float SmellAngle { get; set; }
-        private float SlimeSpeed { get; set; }
-        private float TurningSpeed { get; set; }
-        private float WigglyPathCoeff { get; set; }
-        private float DepositPheromoneAmount { get; set; }
+        // Initializes the settings class for the simulation
+        public SimulationSettings settings { get; set; }
 
         /// <summary>
         /// Slime Simulation constructor
@@ -50,16 +43,7 @@ namespace SlimeSimulationV._2
             Field = new PheromoneField(width, height);
             FoodSources = new List<PointF>();
             Agents = new List<SlimeAgent>();
-
-            // Simulation parameters
-            DecayRate = 0.9f;
-            SmellDistance = 20f;
-            SmellAngle = 2f;
-            SlimeSpeed = 1.0f;
-            TurningSpeed = 0.4f;
-            WigglyPathCoeff = 0.05f;
-            DepositPheromoneAmount = 4f;
-
+            settings = new SimulationSettings();
         }
 
         /// <summary>
@@ -77,7 +61,7 @@ namespace SlimeSimulationV._2
                 int fy = (int)oat.Y;
                 if (fx >= 0 && fx < Field.Width && fy >= 0 && fy < Field.Height)
                 {
-                    Field.Deposit(fx, fy, 100);
+                    Field.Deposit(fx, fy, settings.FoodEmissionStrength);
                 }
             }
 
@@ -85,38 +69,38 @@ namespace SlimeSimulationV._2
             foreach (var slime in Agents)
             {
                 var angleCenter = slime.heading;
-                var angleRight = slime.heading - SmellAngle / 2;
-                var angleLeft = slime.heading + SmellAngle / 2;
+                var angleRight = slime.heading - settings.SmellAngle / 2;
+                var angleLeft = slime.heading + settings.SmellAngle / 2;
 
                 var smellCenter = Field.Smell(
-                    slime.X + (float)Math.Cos(angleCenter) * SmellDistance,
-                    slime.Y + (float)Math.Sin(angleCenter) * SmellDistance
+                    slime.X + (float)Math.Cos(angleCenter) * settings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleCenter) * settings.SmellDistance
                     );
 
                 var smellRight = Field.Smell(
-                    slime.X + (float)Math.Cos(angleRight) * SmellDistance,
-                    slime.Y + (float)Math.Sin(angleRight) * SmellDistance
+                    slime.X + (float)Math.Cos(angleRight) * settings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleRight) * settings.SmellDistance
                     );
 
                 var smellLeft = Field.Smell(
-                    slime.X + (float)Math.Cos(angleLeft) * SmellDistance,
-                    slime.Y + (float)Math.Sin(angleLeft) * SmellDistance
+                    slime.X + (float)Math.Cos(angleLeft) * settings.SmellDistance,
+                    slime.Y + (float)Math.Sin(angleLeft) * settings.SmellDistance
                     );
 
                 if (smellLeft > smellRight && smellLeft > smellCenter)
                 {
-                    slime.heading += TurningSpeed;
+                    slime.heading += settings.TurningSpeed;
                 }
                 else if (smellRight > smellLeft && smellRight > smellCenter)
                 {
-                    slime.heading -= TurningSpeed;
+                    slime.heading -= settings.TurningSpeed;
                 }
 
                 // Random wiggle
-                slime.heading += (float)((RNG.NextDouble() - 0.5) * WigglyPathCoeff);
+                slime.heading += (float)((RNG.NextDouble() - 0.5) * settings.WigglyPathCoeff);
 
-                float newX = slime.X + (float)Math.Cos(slime.heading) * SlimeSpeed;
-                float newY = slime.Y + (float)Math.Sin(slime.heading) * SlimeSpeed;
+                float newX = slime.X + (float)Math.Cos(slime.heading) * settings.SlimeSpeed;
+                float newY = slime.Y + (float)Math.Sin(slime.heading) * settings.SlimeSpeed;
 
                 // Wrapping
                 if (newX < 0) { newX = Field.Width - 1; }
@@ -124,6 +108,7 @@ namespace SlimeSimulationV._2
                 else if (newY < 0) { newY = Field.Height - 1; }
                 else if (newY >= Field.Height) { newY = 0; }
 
+                // Sets the definitive new position
                 slime.X = newX;
                 slime.Y = newY;
 
@@ -132,12 +117,12 @@ namespace SlimeSimulationV._2
                 int iy = (int)slime.Y;
                 if (ix >= 0 && ix < Field.Width && iy >= 0 && iy < Field.Height)
                 {
-                    Field.Deposit(ix, iy, DepositPheromoneAmount);
+                    Field.Deposit(ix, iy, settings.DepositPheromoneAmount);
                 }           
             }
 
-            // Duffuse trail
-            Field.DiffuseAndDecay(DecayRate);
+            // Diffuse and decay trail
+            Field.DiffuseAndDecay(settings.DecayRate);
 
             // Redraw(); ADD INTO TICK TIMER LOOP
         }

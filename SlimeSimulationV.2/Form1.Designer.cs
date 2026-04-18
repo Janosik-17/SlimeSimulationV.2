@@ -152,7 +152,7 @@
             Controls.Add(pictureBox1);
             Controls.Add(btnStart);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Slime Simulation V.2";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
