@@ -209,12 +209,9 @@ namespace SlimeSimulationV._2
                     }
                 }
             }
-
             // Diffuse and decay trail
             FoodTrail.DiffuseAndDecay(currentSettings.DecayRate);
             HomeTrail.DiffuseAndDecay(currentSettings.DecayRate);
-
-            // Redraw(); ADD INTO TICK TIMER LOOP
         }
 
         /// <summary>
@@ -265,6 +262,5 @@ namespace SlimeSimulationV._2
             Agents.Clear();
             FoodSources.Clear();
         }
-
     }
 }
