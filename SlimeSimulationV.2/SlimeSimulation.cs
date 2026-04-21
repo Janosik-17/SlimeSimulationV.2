@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace SlimeSimulationV._2
 {
@@ -65,16 +66,38 @@ namespace SlimeSimulationV._2
             {
                 var hive = FoodSources[0];
 
+                // Deposits a random blob around food source
+                for (int i = 0; i < 40; i++)
+                {
+                    float angle = (float)(RNG.NextDouble() * Math.PI * 2);
+                    float dist = (float)(RNG.NextDouble() * 8);
+
+                    float posX = hive.X + (float)Math.Cos(angle) * dist;
+                    float posY = hive.Y + (float)Math.Sin(angle) * dist;
+
+                    if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
+                    {
+                        HomeTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
+                    }
+                }
             }
-            //foreach (var oat in FoodSources)
-            //{
-            //    int fx = (int)oat.X;
-            //    int fy = (int)oat.Y;
-            //    if (fx >= 0 && fx < FoodTrail.Width && fy >= 0 && fy < FoodTrail.Height)
-            //    {
-            //        FoodTrail.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
-            //    }
-            //}            
+            // Deposits the food trial for all other food sources
+            foreach (var oat in FoodSources.Skip(1))
+            {
+                for (int i = 0; i < 40; i++)
+                {
+                    float angle = (float)(RNG.NextDouble() * Math.PI * 2);
+                    float dist = (float)(RNG.NextDouble() * 8);
+
+                    float posX = oat.X + (float)Math.Cos(angle) * dist;
+                    float posY = oat.Y + (float)Math.Sin(angle) * dist;
+
+                    if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
+                    {
+                        HomeTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
+                    }
+                }
+            }            
 
             // Update and move slimes
             foreach (var slime in Agents)
@@ -189,6 +212,7 @@ namespace SlimeSimulationV._2
 
             // Diffuse and decay trail
             FoodTrail.DiffuseAndDecay(currentSettings.DecayRate);
+            HomeTrail.DiffuseAndDecay(currentSettings.DecayRate);
 
             // Redraw(); ADD INTO TICK TIMER LOOP
         }
@@ -237,6 +261,7 @@ namespace SlimeSimulationV._2
         public void ClearAll()
         {
             FoodTrail.ClearPheromones();
+            HomeTrail.ClearPheromones();
             Agents.Clear();
             FoodSources.Clear();
         }
