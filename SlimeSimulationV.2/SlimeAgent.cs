@@ -16,6 +16,11 @@ namespace SlimeSimulationV._2
         public float heading { get; set; } // radians
 
         /// <summary>
+        /// Stores wheather the agent has found food or is searching for it
+        /// </summary>
+        public bool IsSearching { get; set; } = true;
+
+        /// <summary>
         /// Slime agent constructor
         /// </summary>
         /// <param name="x">The x coordinate of the agent</param>
@@ -23,9 +28,10 @@ namespace SlimeSimulationV._2
         /// <param name="angle">The angle in RADIANS of the heading of the agent</param>
         public SlimeAgent(float x, float y, float angle)
         {
-            this.X = x;
-            this.Y = y;
-            this.heading = angle;
+            X = x;
+            Y = y;
+            heading = angle;
+            IsSearching = true;
         }
     }
 }

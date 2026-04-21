@@ -45,7 +45,7 @@ namespace SlimeSimulationV._2
             renderer = new SimRenderer(pictureBox1, WIDTH, HEIGHT);
 
             // Initial render - to display a black screen
-            renderer.Render(sim.Field, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.FoodSources);
 
             // Set the values in Form1 to the default settings
             upDownSmellDistance.Value = (decimal)sim.currentSettings.SmellDistance;
@@ -77,7 +77,7 @@ namespace SlimeSimulationV._2
                 sim.AddFood(mx, my);
             }
 
-            renderer.Render(sim.Field, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.FoodSources);
         }
 
         // Starts and stops the simulation + hides the buttons which are not accessible
@@ -123,7 +123,7 @@ namespace SlimeSimulationV._2
         private void simTimer_Tick(object sender, EventArgs e)
         {
             sim.Step();
-            renderer.Render(sim.Field, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.FoodSources);
         }
 
         // Clears everything in the picture box
@@ -132,7 +132,7 @@ namespace SlimeSimulationV._2
             if (!simTimer.Enabled)
             {
                 sim.ClearAll();
-                renderer.Render(sim.Field, sim.FoodSources);
+                renderer.Render(sim.FoodTrail, sim.FoodSources);
             }
         }
 
@@ -140,7 +140,7 @@ namespace SlimeSimulationV._2
         private void btnSeed_Click(object sender, EventArgs e)
         {
             sim.AddSlimeBlob(400, 300, 90, 400);
-            renderer.Render(sim.Field, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.FoodSources);
         }
 
         // Switches the food/slime mode

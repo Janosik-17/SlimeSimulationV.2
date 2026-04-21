@@ -16,9 +16,14 @@ namespace SlimeSimulationV._2
         public Random RNG { get; } = new Random();
 
         /// <summary>
-        /// The primary pheromone field used by the simulation
+        /// Pheromone trail laid by ants returning home - guides other towards food
         /// </summary>
-        public PheromoneField Field { get; }
+        public PheromoneField FoodTrail { get; }
+
+        /// <summary>
+        /// Pheromone trail laid by ants searching for food - guides others towards home
+        /// </summary>
+        public PheromoneField HomeTrail { get; }
 
         /// <summary>
         /// List of all the food sources stored as PointF`s
@@ -40,7 +45,8 @@ namespace SlimeSimulationV._2
         /// <param name="height">Height of the simulation in pixels</param>
         public SlimeSimulation(int width, int height)
         {
-            Field = new PheromoneField(width, height);
+            FoodTrail = new PheromoneField(width, height);
+            HomeTrail = new PheromoneField(width, height);
             FoodSources = new List<PointF>();
             Agents = new List<SlimeAgent>();
             currentSettings = new SimulationSettings();
@@ -54,35 +60,52 @@ namespace SlimeSimulationV._2
         /// <remarks>DOES NOT REDRAW THE BITMAP IMAGE ANYMORE</remarks>
         public void Step()
         {
-            // Emit food trail
-            foreach (var oat in FoodSources)
+            // Emit trail - hive emits the home trail, other food emits the food trial
+            if (FoodSources.Count > 0)
             {
-                int fx = (int)oat.X;
-                int fy = (int)oat.Y;
-                if (fx >= 0 && fx < Field.Width && fy >= 0 && fy < Field.Height)
-                {
-                    Field.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
-                }
+                var hive = FoodSources[0];
+
             }
+            //foreach (var oat in FoodSources)
+            //{
+            //    int fx = (int)oat.X;
+            //    int fy = (int)oat.Y;
+            //    if (fx >= 0 && fx < FoodTrail.Width && fy >= 0 && fy < FoodTrail.Height)
+            //    {
+            //        FoodTrail.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
+            //    }
+            //}            
 
             // Update and move slimes
             foreach (var slime in Agents)
             {
+                // Sets which trail the agent should follow
+                PheromoneField trailToFollow;
+
+                if (slime.IsSearching)
+                {
+                    trailToFollow = FoodTrail;
+                }
+                else
+                {
+                    trailToFollow = HomeTrail;
+                }
+
                 var angleCenter = slime.heading;
                 var angleRight = slime.heading - currentSettings.SmellAngle / 2;
                 var angleLeft = slime.heading + currentSettings.SmellAngle / 2;
 
-                var smellCenter = Field.Smell(
+                var smellCenter = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleCenter) * currentSettings.SmellDistance,
                     slime.Y + (float)Math.Sin(angleCenter) * currentSettings.SmellDistance
                     );
 
-                var smellRight = Field.Smell(
+                var smellRight = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleRight) * currentSettings.SmellDistance,
                     slime.Y + (float)Math.Sin(angleRight) * currentSettings.SmellDistance
                     );
 
-                var smellLeft = Field.Smell(
+                var smellLeft = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleLeft) * currentSettings.SmellDistance,
                     slime.Y + (float)Math.Sin(angleLeft) * currentSettings.SmellDistance
                     );
@@ -102,27 +125,70 @@ namespace SlimeSimulationV._2
                 float newX = slime.X + (float)Math.Cos(slime.heading) * currentSettings.SlimeSpeed;
                 float newY = slime.Y + (float)Math.Sin(slime.heading) * currentSettings.SlimeSpeed;
 
-                // Wrapping
-                if (newX < 0) { newX = Field.Width - 1; }
-                else if (newX >= Field.Width) { newX = 0; }
-                else if (newY < 0) { newY = Field.Height - 1; }
-                else if (newY >= Field.Height) { newY = 0; }
+                // Wrapping - food trail and home trail has the same width and height
+                if (newX < 0) { newX = FoodTrail.Width - 1; }
+                else if (newX >= FoodTrail.Width) { newX = 0; }
+                else if (newY < 0) { newY = FoodTrail.Height - 1; }
+                else if (newY >= FoodTrail.Height) { newY = 0; }
 
                 // Sets the definitive new position
                 slime.X = newX;
                 slime.Y = newY;
 
-                // Deposit pheromones
-                int ix = (int)slime.X;
-                int iy = (int)slime.Y;
-                if (ix >= 0 && ix < Field.Width && iy >= 0 && iy < Field.Height)
+                // Chose which trail to deposit
+                PheromoneField trailToDeposit;
+
+                if (slime.IsSearching)
                 {
-                    Field.Deposit(ix, iy, currentSettings.DepositPheromoneAmount);
-                }           
+                    trailToDeposit = HomeTrail;
+                }          
+                else       
+                {          
+                    trailToDeposit = FoodTrail;
+                }
+
+                trailToDeposit.Deposit(slime.X, slime.Y, currentSettings.DepositPheromoneAmount);
+
+                // Deposit pheromones - deprecated
+                //int ix = (int)slime.X;
+                //int iy = (int)slime.Y;
+                //if (ix >= 0 && ix < FoodTrail.Width && iy >= 0 && iy < FoodTrail.Height)
+                //{
+                //    FoodTrail.Deposit(ix, iy, currentSettings.DepositPheromoneAmount);
+                //}
+                
+                // Check if slime has reached a food source
+                if (slime.IsSearching)
+                {
+                    // Skips the home food source
+                    foreach (var food in FoodSources.Skip(1))
+                    {
+                        // Checks the distance between the slime and the food source
+                        if (Math.Abs(slime.X - food.X) < 8f && (Math.Abs(slime.Y - food.Y)) < 8f)
+                        {
+                            // Flips the searching swith and turns the slime around 
+                            slime.IsSearching = false;
+                            slime.heading += (float)Math.PI;
+                            break;
+                        }
+                    }
+                }
+                // Check if slime has reached home - if home doesnt exist it keeps running around
+                else if (FoodSources.Count > 0)
+                {
+                    var hive = FoodSources[0];
+                    if (Math.Abs(slime.X - hive.X) < 8f && (Math.Abs(slime.Y - hive.Y)) < 8f)
+                    {
+                        // Flips the searching swith and turns the slime around 
+                        slime.IsSearching = true;
+                        slime.heading += (float)Math.PI;
+                        break;
+                    }
+                }
             }
 
             // Diffuse and decay trail
-            Field.DiffuseAndDecay(currentSettings.DecayRate);
+            FoodTrail.DiffuseAndDecay(currentSettings.DecayRate);
 
             // Redraw(); ADD INTO TICK TIMER LOOP
         }
@@ -149,7 +215,7 @@ namespace SlimeSimulationV._2
 
                 if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
                 {
-                    Field.Deposit(posX, posY, 25);
+                    FoodTrail.Deposit(posX, posY, 25);
                 }
             }
         }
@@ -170,7 +236,7 @@ namespace SlimeSimulationV._2
         /// </summary>
         public void ClearAll()
         {
-            Field.ClearPheromones();
+            FoodTrail.ClearPheromones();
             Agents.Clear();
             FoodSources.Clear();
         }
