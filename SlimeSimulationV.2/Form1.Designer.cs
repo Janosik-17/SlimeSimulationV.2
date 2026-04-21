@@ -299,7 +299,7 @@
             upDownDepositAmount.DecimalPlaces = 1;
             upDownDepositAmount.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
             upDownDepositAmount.Location = new Point(1067, 488);
-            upDownDepositAmount.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            upDownDepositAmount.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
             upDownDepositAmount.Name = "upDownDepositAmount";
             upDownDepositAmount.Size = new Size(93, 31);
             upDownDepositAmount.TabIndex = 31;

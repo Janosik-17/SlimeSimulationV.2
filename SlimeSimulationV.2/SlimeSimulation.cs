@@ -94,7 +94,7 @@ namespace SlimeSimulationV._2
 
                     if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
                     {
-                        HomeTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
+                        FoodTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
                     }
                 }
             }            
@@ -151,7 +151,7 @@ namespace SlimeSimulationV._2
                 // Wrapping - food trail and home trail has the same width and height
                 if (newX < 0) { newX = FoodTrail.Width - 1; }
                 else if (newX >= FoodTrail.Width) { newX = 0; }
-                else if (newY < 0) { newY = FoodTrail.Height - 1; }
+                if (newY < 0) { newY = FoodTrail.Height - 1; }
                 else if (newY >= FoodTrail.Height) { newY = 0; }
 
                 // Sets the definitive new position
@@ -211,7 +211,7 @@ namespace SlimeSimulationV._2
             }
             // Diffuse and decay trail
             FoodTrail.DiffuseAndDecay(currentSettings.DecayRate);
-            HomeTrail.DiffuseAndDecay(currentSettings.DecayRate);
+            HomeTrail.DiffuseAndDecay(currentSettings.DecayRate);            
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace SlimeSimulationV._2
         /// <param name="ammount">The total ammount of new agents to be added</param>
         public void AddSlimeBlob(float x, float y, int radius, int ammount)
         {
-
+            // Deposits the 'ammount' number of slimes
             for (int i = 0; i < ammount; i++)
             {
                 float angle = (float)(RNG.NextDouble() * Math.PI * 2);

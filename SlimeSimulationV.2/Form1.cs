@@ -46,6 +46,10 @@ namespace SlimeSimulationV._2
 
             // Initial render - to display a black screen
             renderer.Render(sim.FoodTrail,sim.HomeTrail, sim.FoodSources);
+            
+            // Initializes the presets folder
+            SettingsManager.InitializePresetsFolder();
+
 
             // Set the values in Form1 to the default settings
             upDownSmellDistance.Value = (decimal)sim.currentSettings.SmellDistance;
@@ -139,7 +143,7 @@ namespace SlimeSimulationV._2
         // Places a large blob of slime agents in the middle of the Picture Box
         private void btnSeed_Click(object sender, EventArgs e)
         {
-            sim.AddSlimeBlob(400, 300, 90, 400);
+            sim.AddSlimeBlob(400, 300, 90, 100);
             renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
         }
 
