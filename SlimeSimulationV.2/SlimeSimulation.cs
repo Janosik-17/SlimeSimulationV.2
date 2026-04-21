@@ -59,9 +59,24 @@ namespace SlimeSimulationV._2
             {
                 int fx = (int)oat.X;
                 int fy = (int)oat.Y;
-                if (fx >= 0 && fx < Field.Width && fy >= 0 && fy < Field.Height)
+                //if (fx >= 0 && fx < Field.Width && fy >= 0 && fy < Field.Height)
+                //{
+                //    Field.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
+                //}
+                for (int i = 0; i < 50; i++)
                 {
-                    Field.Deposit(fx, fy, currentSettings.FoodEmissionStrength);
+                    float angle = (float)(RNG.NextDouble() * Math.PI * 2);
+                    float dist = (float)(RNG.NextDouble() * 10);
+
+                    float posX = fx + (float)Math.Cos(angle) * dist;
+                    float posY = fy + (float)Math.Sin(angle) * dist;
+
+                    // Agents.Add(new SlimeAgent(posX, posY, angle));
+
+                    if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
+                    {
+                        Field.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
+                    }
                 }
             }
 
@@ -161,7 +176,7 @@ namespace SlimeSimulationV._2
         /// <param name="y">Y coordinate</param>
         public void AddFood(float x, float y)
         {
-            FoodSources.Add(new PointF(x, y));
+            FoodSources.Add(new PointF(x, y));  
         }
 
         /// <summary>
