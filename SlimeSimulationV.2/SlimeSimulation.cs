@@ -214,10 +214,6 @@ namespace SlimeSimulationV._2
                     var hive = FoodSources[0];
                     if (Math.Abs(slime.X - hive.X) < 4f && (Math.Abs(slime.Y - hive.Y)) < 4f)
                     {
-                        // Flips the searching swith and turns the slime a
-                        //
-                        //
-                        // round 
                         slime.IsSearching = true;
                         slime.heading += (float)Math.PI;
                         break;
