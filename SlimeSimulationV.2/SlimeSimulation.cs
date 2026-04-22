@@ -152,8 +152,6 @@ namespace SlimeSimulationV._2
                 if (newX < 0) { newX = FoodTrail.Width - 1; }
                 else if (newX >= FoodTrail.Width) { newX = 0; }
                 if (newY < 0) { newY = FoodTrail.Height - 1; }
-
-
                 else if (newY >= FoodTrail.Height) { newY = 0; }
 
                 // Sets the definitive new position
