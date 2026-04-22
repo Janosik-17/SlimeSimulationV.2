@@ -6,8 +6,8 @@ namespace SlimeSimulationV._2
     public partial class Form1 : Form
     {
         // Resolution of the simulation
-        private const int WIDTH = 800;
-        private const int HEIGHT = 600;
+        private const int WIDTH = 200;
+        private const int HEIGHT = 150;
 
         // Mode switching var, and 
         private bool slimeMode = true;
@@ -69,12 +69,12 @@ namespace SlimeSimulationV._2
         {
             if (simTimer.Enabled) return;
 
-            float mx = (float)e.X;
-            float my = (float)e.Y;
+            float mx = ((float)e.X/800) * WIDTH;
+            float my = ((float)e.Y/600) * HEIGHT;
 
             if (slimeMode)
             {
-                sim.AddSlimeBlob(mx, my, 20, 20);
+                sim.AddSlimeBlob(mx, my, 5, 20);
             }
             else
             {
@@ -143,7 +143,7 @@ namespace SlimeSimulationV._2
         // Places a large blob of slime agents in the middle of the Picture Box
         private void btnSeed_Click(object sender, EventArgs e)
         {
-            sim.AddSlimeBlob(400, 300, 90, 100);
+            sim.AddSlimeBlob(100, 75, 20, 50);
             renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
         }
 

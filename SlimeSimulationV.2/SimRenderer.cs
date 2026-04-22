@@ -78,7 +78,7 @@ namespace SlimeSimulationV._2
             {
                 foreach (var food in foodSources)
                 {
-                    g.FillEllipse(Brushes.Orange, food.X - 6, food.Y - 6, 12, 12);
+                    g.FillEllipse(Brushes.Orange, food.X - 2, food.Y - 2, 4, 4);
                 }
             }
 

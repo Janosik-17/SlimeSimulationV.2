@@ -67,15 +67,15 @@ namespace SlimeSimulationV._2
                 var hive = FoodSources[0];
 
                 // Deposits a random blob around food source
-                for (int i = 0; i < 40; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     float angle = (float)(RNG.NextDouble() * Math.PI * 2);
-                    float dist = (float)(RNG.NextDouble() * 8);
+                    float dist = (float)(RNG.NextDouble() * 4);
 
                     float posX = hive.X + (float)Math.Cos(angle) * dist;
                     float posY = hive.Y + (float)Math.Sin(angle) * dist;
 
-                    if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
+                    if (posX >= 0 && posX < FoodTrail.Width && posY >= 0 && posY < FoodTrail.Height)
                     {
                         HomeTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
                     }
@@ -84,15 +84,15 @@ namespace SlimeSimulationV._2
             // Deposits the food trial for all other food sources
             foreach (var oat in FoodSources.Skip(1))
             {
-                for (int i = 0; i < 40; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     float angle = (float)(RNG.NextDouble() * Math.PI * 2);
-                    float dist = (float)(RNG.NextDouble() * 8);
+                    float dist = (float)(RNG.NextDouble() * 4);
 
                     float posX = oat.X + (float)Math.Cos(angle) * dist;
                     float posY = oat.Y + (float)Math.Sin(angle) * dist;
 
-                    if (posX >= 0 && posX < 800 && posY >= 0 && posY < 600)
+                    if (posX >= 0 && posX < FoodTrail.Width && posY >= 0 && posY < FoodTrail.Height)
                     {
                         FoodTrail.Deposit(posX, posY, currentSettings.FoodEmissionStrength);
                     }
@@ -152,6 +152,8 @@ namespace SlimeSimulationV._2
                 if (newX < 0) { newX = FoodTrail.Width - 1; }
                 else if (newX >= FoodTrail.Width) { newX = 0; }
                 if (newY < 0) { newY = FoodTrail.Height - 1; }
+
+
                 else if (newY >= FoodTrail.Height) { newY = 0; }
 
                 // Sets the definitive new position
@@ -187,7 +189,7 @@ namespace SlimeSimulationV._2
                     foreach (var food in FoodSources.Skip(1))
                     {
                         // Checks the distance between the slime and the food source
-                        if (Math.Abs(slime.X - food.X) < 8f && (Math.Abs(slime.Y - food.Y)) < 8f)
+                        if (Math.Abs(slime.X - food.X) < 4f && (Math.Abs(slime.Y - food.Y)) < 4f)
                         {
                             // Flips the searching swith and turns the slime around 
                             slime.IsSearching = false;
@@ -200,7 +202,7 @@ namespace SlimeSimulationV._2
                 else if (FoodSources.Count > 0)
                 {
                     var hive = FoodSources[0];
-                    if (Math.Abs(slime.X - hive.X) < 8f && (Math.Abs(slime.Y - hive.Y)) < 8f)
+                    if (Math.Abs(slime.X - hive.X) < 4f && (Math.Abs(slime.Y - hive.Y)) < 4f)
                     {
                         // Flips the searching swith and turns the slime around 
                         slime.IsSearching = true;
