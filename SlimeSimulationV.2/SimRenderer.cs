@@ -41,7 +41,7 @@ namespace SlimeSimulationV._2
         /// Uses an <c>unsafe</c> code block with a <c>byte*</c> pointer into
         /// the bitmaps pixel buffer. Uses a B, G, R, A colour layout. 
         /// </remarks>
-        public void Render(PheromoneField foodTrail, PheromoneField homeTrail, List<PointF> foodSources)
+        public void Render(PheromoneField foodTrail, PheromoneField homeTrail, List<FoodSource> foodSources)
         {
             // Fast pixel writing with LockBits
             BitmapData data = bitmap.LockBits(

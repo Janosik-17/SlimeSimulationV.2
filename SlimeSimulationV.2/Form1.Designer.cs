@@ -57,6 +57,10 @@
             upDownDecayRate = new NumericUpDown();
             btnSaveSettings = new Button();
             btnLoadSettings = new Button();
+            upDownFoodNutrition = new NumericUpDown();
+            label7 = new Label();
+            radButtonFoodForever = new RadioButton();
+            label8 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)upDownSmellDistance).BeginInit();
@@ -67,6 +71,7 @@
             ((System.ComponentModel.ISupportInitialize)upDownDepositAmount).BeginInit();
             ((System.ComponentModel.ISupportInitialize)upDownEmisionRate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)upDownDecayRate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)upDownFoodNutrition).BeginInit();
             SuspendLayout();
             // 
             // simTimer
@@ -343,11 +348,55 @@
             btnLoadSettings.UseVisualStyleBackColor = true;
             btnLoadSettings.Click += btnLoadSettings_Click;
             // 
+            // upDownFoodNutrition
+            // 
+            upDownFoodNutrition.Location = new Point(1067, 597);
+            upDownFoodNutrition.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            upDownFoodNutrition.Minimum = new decimal(new int[] { 1, 0, 0, int.MinValue });
+            upDownFoodNutrition.Name = "upDownFoodNutrition";
+            upDownFoodNutrition.Size = new Size(93, 31);
+            upDownFoodNutrition.TabIndex = 36;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(929, 599);
+            label7.Name = "label7";
+            label7.Size = new Size(129, 25);
+            label7.TabIndex = 37;
+            label7.Text = "Food Nutrition";
+            label7.TextAlign = ContentAlignment.TopRight;
+            // 
+            // radButtonFoodForever
+            // 
+            radButtonFoodForever.AutoSize = true;
+            radButtonFoodForever.Location = new Point(1097, 637);
+            radButtonFoodForever.Name = "radButtonFoodForever";
+            radButtonFoodForever.RightToLeft = RightToLeft.Yes;
+            radButtonFoodForever.Size = new Size(21, 20);
+            radButtonFoodForever.TabIndex = 38;
+            radButtonFoodForever.TabStop = true;
+            radButtonFoodForever.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(872, 635);
+            label8.Name = "label8";
+            label8.Size = new Size(186, 25);
+            label8.TabIndex = 39;
+            label8.Text = "Food Does Not Perish\r\n";
+            label8.TextAlign = ContentAlignment.TopRight;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1184, 646);
+            ClientSize = new Size(1236, 687);
+            Controls.Add(label8);
+            Controls.Add(radButtonFoodForever);
+            Controls.Add(label7);
+            Controls.Add(upDownFoodNutrition);
             Controls.Add(btnLoadSettings);
             Controls.Add(btnSaveSettings);
             Controls.Add(upDownDecayRate);
@@ -385,6 +434,7 @@
             ((System.ComponentModel.ISupportInitialize)upDownDepositAmount).EndInit();
             ((System.ComponentModel.ISupportInitialize)upDownEmisionRate).EndInit();
             ((System.ComponentModel.ISupportInitialize)upDownDecayRate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)upDownFoodNutrition).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -419,5 +469,9 @@
         private NumericUpDown upDownDecayRate;
         private Button btnSaveSettings;
         private Button btnLoadSettings;
+        private NumericUpDown upDownFoodNutrition;
+        private Label label7;
+        private RadioButton radButtonFoodForever;
+        private Label label8;
     }
 }
