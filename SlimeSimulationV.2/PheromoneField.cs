@@ -105,14 +105,17 @@ namespace SlimeSimulationV._2
 
 
 
-            // 2. Copy the NEW values back to the main field
-            Parallel.For(1, Width, x =>
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    current[x, y] = next[x, y];
-                }
-            });
+            // 2. Copy the NEW values back to the main field - old
+            //Parallel.For(1, Width, x =>
+            //{
+            //    for (int y = 0; y < Height; y++)
+            //    {
+            //        current[x, y] = next[x, y];
+            //    }
+            //});
+
+            // New method, works because next is overwritten each step
+            (current, next) = (next, current);
         }
 
         /// <summary>
