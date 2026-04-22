@@ -17,3 +17,6 @@ Currently has two branches, the program on the main branch is the orignal simula
   "FoodIsForever": false
 }
 </code>
+
+<img width="1227" height="718" alt="image" src="https://github.com/user-attachments/assets/b5b0a838-6663-42f5-beff-ee8e2f844361" />
+
