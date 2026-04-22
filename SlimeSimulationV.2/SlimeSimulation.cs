@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,9 @@ namespace SlimeSimulationV._2
         /// <remarks>DOES NOT REDRAW THE BITMAP IMAGE ANYMORE</remarks>
         public void Step()
         {
+            // List of all depleted food sources to delete at the end of the step
+            var depletedFoodSources = new List<FoodSource>();
+
             // Emit trail - hive emits the home trail, other food emits the food trial
             if (FoodSources.Count > 0)
             {
@@ -119,19 +123,24 @@ namespace SlimeSimulationV._2
                 var angleRight = slime.heading - currentSettings.SmellAngle / 2;
                 var angleLeft = slime.heading + currentSettings.SmellAngle / 2;
 
+                int margin = 2;
+
                 var smellCenter = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleCenter) * currentSettings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleCenter) * currentSettings.SmellDistance
+                    slime.Y + (float)Math.Sin(angleCenter) * currentSettings.SmellDistance,
+                    margin
                     );
 
                 var smellRight = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleRight) * currentSettings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleRight) * currentSettings.SmellDistance
+                    slime.Y + (float)Math.Sin(angleRight) * currentSettings.SmellDistance,
+                    margin
                     );
 
                 var smellLeft = trailToFollow.Smell(
                     slime.X + (float)Math.Cos(angleLeft) * currentSettings.SmellDistance,
-                    slime.Y + (float)Math.Sin(angleLeft) * currentSettings.SmellDistance
+                    slime.Y + (float)Math.Sin(angleLeft) * currentSettings.SmellDistance,
+                    margin
                     );
 
                 // Turn the agent in the correct direction
@@ -151,10 +160,31 @@ namespace SlimeSimulationV._2
                 float newY = slime.Y + (float)Math.Sin(slime.heading) * currentSettings.SlimeSpeed;
 
                 // Wrapping - food trail and home trail has the same width and height
-                if (newX < 0) { newX = FoodTrail.Width - 1; }
-                else if (newX >= FoodTrail.Width) { newX = 0; }
-                if (newY < 0) { newY = FoodTrail.Height - 1; }
-                else if (newY >= FoodTrail.Height) { newY = 0; }
+                if (newX < 0)
+                {
+                    newX = 1;
+                    slime.heading = (float)Math.PI - slime.heading; // reflect horizontally
+                    slime.heading += (float)((RNG.NextDouble() - 0.5) * 0.3f); // nudge
+                }
+                else if (newX >= FoodTrail.Width)
+                {
+                    newX = FoodTrail.Width - 2;
+                    slime.heading = (float)Math.PI - slime.heading; // reflect horizontally
+                    slime.heading += (float)((RNG.NextDouble() - 0.5) * 0.3f);
+                }
+
+                if (newY < 0)
+                {
+                    newY = 1;
+                    slime.heading = -slime.heading; // reflect vertically
+                    slime.heading += (float)((RNG.NextDouble() - 0.5) * 0.3f);
+                }
+                else if (newY >= FoodTrail.Height)
+                {
+                    newY = FoodTrail.Height - 2;
+                    slime.heading = -slime.heading; // reflect vertically
+                    slime.heading += (float)((RNG.NextDouble() - 0.5) * 0.3f);
+                }
 
                 // Sets the definitive new position
                 slime.X = newX;
@@ -172,7 +202,18 @@ namespace SlimeSimulationV._2
                     trailToDeposit = FoodTrail;
                 }
 
-                trailToDeposit.Deposit(slime.X, slime.Y, currentSettings.DepositPheromoneAmount);
+                // Only deposit if away from the border
+                int ix = (int)slime.X;
+                int iy = (int)slime.Y;
+                int borderMargin = 2;
+
+                bool nearBorder = ix < borderMargin || ix >= FoodTrail.Width - borderMargin ||
+                                  iy < borderMargin || iy >= FoodTrail.Height - borderMargin;
+
+                if (!nearBorder)
+                {
+                    trailToDeposit.Deposit(slime.X, slime.Y, currentSettings.DepositPheromoneAmount);
+                }
 
                 // Deposit pheromones - deprecated
                 //int ix = (int)slime.X;
@@ -181,7 +222,7 @@ namespace SlimeSimulationV._2
                 //{
                 //    FoodTrail.Deposit(ix, iy, currentSettings.DepositPheromoneAmount);
                 //}
-                
+
                 // Check if slime has reached a food source
                 if (slime.IsSearching)
                 {
@@ -203,7 +244,7 @@ namespace SlimeSimulationV._2
                         // Checks whether the food source has been eaten completelly                        
                         if (food.nutrition <= 0)
                         {
-                            FoodSources.Remove(food);
+                            depletedFoodSources.Add(food);
                         }
                     }
                 }
@@ -219,10 +260,19 @@ namespace SlimeSimulationV._2
                         break;
                     }
                 }
+                // Debug.WriteLine($"{trailToFollow} {trailToDeposit}");
+                if (trailToDeposit == trailToFollow) Debug.WriteLine("Circle error");
             }
             // Diffuse and decay trail
             FoodTrail.DiffuseAndDecay(currentSettings.DecayRate);
-            HomeTrail.DiffuseAndDecay(currentSettings.DecayRate);            
+            HomeTrail.DiffuseAndDecay(currentSettings.DecayRate); 
+            
+            // Delete the depleted food sources
+            foreach (var _food in depletedFoodSources)
+            {
+                FoodSources.Remove(_food);
+            }
+
         }
 
         /// <summary>
@@ -243,6 +293,8 @@ namespace SlimeSimulationV._2
 
                 float posX = x + (float)Math.Cos(angle) * dist;
                 float posY = y + (float)Math.Sin(angle) * dist;
+
+
 
                 Agents.Add(new SlimeAgent(posX, posY, angle));
 

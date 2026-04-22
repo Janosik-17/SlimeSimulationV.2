@@ -20,6 +20,10 @@ namespace SlimeSimulationV._2
         /// </summary>
         public bool IsSearching { get; set; } = true;
 
+        // Maybe will add that ants after a set ammount of time
+        // will convert to other type to prevent death loops
+        public int TimeSearchingHome { get; set; } = 0;
+
         /// <summary>
         /// Slime agent constructor
         /// </summary>

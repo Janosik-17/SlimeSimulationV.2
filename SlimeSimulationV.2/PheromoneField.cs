@@ -52,11 +52,15 @@ namespace SlimeSimulationV._2
         /// <param name="x">X coordinate in the pheromone field</param>
         /// <param name="y">Y coordinate in the pheromone field</param>
         /// <returns>Value of the pheromone at [x,y] of field</returns>
-        public float Smell(float x, float y)
+        public float Smell(float x, float y, int borderMargin)
         {
             int ix = (int)x;
             int iy = (int)y;
-            if (ix < 0 || ix >= Width || iy < 0 || iy >= Height) return 0f;
+
+            if (ix < borderMargin || ix >= Width - borderMargin ||
+                iy < borderMargin || iy >= Height - borderMargin)
+                return 0f;
+
             return current[ix, iy];
         }
 
@@ -69,8 +73,10 @@ namespace SlimeSimulationV._2
         /// <param name="ammount">The ammount by which the value of the pheromone is increased</param>
         public void Deposit(float x, float y, float ammount)
         {
-            int cx = (int)x;
-            int cy = (int)y;
+            // Checks for borders when depositing - max position on picture box is 200
+            // but pheromone field is 0 - 199
+            int cx = Math.Min(Width - 1, (int)x);
+            int cy = Math.Min(Height - 1, (int)y);
 
             // Holds the maximum value lover than 255
             current[cx, cy] = Math.Min(255, current[cx, cy] + ammount);
@@ -98,7 +104,8 @@ namespace SlimeSimulationV._2
                     sum += current[x - 1, y + 1] * 0.025f;
                     sum += current[x + 1, y + 1] * 0.025f;
 
-                    next[x, y] = Math.Min(255, sum * decayRate);
+                    var nextValue = Math.Min(255, sum * decayRate);
+                    next[x, y] = (nextValue <= 1) ? 0 : nextValue;
                 }
             });
 

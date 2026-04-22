@@ -59,8 +59,8 @@
             btnLoadSettings = new Button();
             upDownFoodNutrition = new NumericUpDown();
             label7 = new Label();
-            radButtonFoodForever = new RadioButton();
             label8 = new Label();
+            checkBoxFoodForever = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)upDownSmellDistance).BeginInit();
@@ -367,17 +367,6 @@
             label7.Text = "Food Nutrition";
             label7.TextAlign = ContentAlignment.TopRight;
             // 
-            // radButtonFoodForever
-            // 
-            radButtonFoodForever.AutoSize = true;
-            radButtonFoodForever.Location = new Point(1097, 637);
-            radButtonFoodForever.Name = "radButtonFoodForever";
-            radButtonFoodForever.RightToLeft = RightToLeft.Yes;
-            radButtonFoodForever.Size = new Size(21, 20);
-            radButtonFoodForever.TabIndex = 38;
-            radButtonFoodForever.TabStop = true;
-            radButtonFoodForever.UseVisualStyleBackColor = true;
-            // 
             // label8
             // 
             label8.AutoSize = true;
@@ -388,13 +377,22 @@
             label8.Text = "Food Does Not Perish\r\n";
             label8.TextAlign = ContentAlignment.TopRight;
             // 
+            // checkBoxFoodForever
+            // 
+            checkBoxFoodForever.AutoSize = true;
+            checkBoxFoodForever.Location = new Point(1100, 638);
+            checkBoxFoodForever.Name = "checkBoxFoodForever";
+            checkBoxFoodForever.Size = new Size(22, 21);
+            checkBoxFoodForever.TabIndex = 40;
+            checkBoxFoodForever.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1236, 687);
+            Controls.Add(checkBoxFoodForever);
             Controls.Add(label8);
-            Controls.Add(radButtonFoodForever);
             Controls.Add(label7);
             Controls.Add(upDownFoodNutrition);
             Controls.Add(btnLoadSettings);
@@ -473,5 +471,6 @@
         private Label label7;
         private RadioButton radButtonFoodForever;
         private Label label8;
+        private CheckBox checkBoxFoodForever;
     }
 }

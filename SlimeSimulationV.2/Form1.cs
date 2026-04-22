@@ -40,7 +40,7 @@ namespace SlimeSimulationV._2
                 upDownSmellDistance,
                 upDownTurningSpeed,
                 upDownFoodNutrition,
-                radButtonFoodForever
+                checkBoxFoodForever
             };
 
             // Sets the renderer to output to pictureBox1
@@ -63,7 +63,7 @@ namespace SlimeSimulationV._2
             upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
             upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
             upDownFoodNutrition.Value = (decimal)sim.currentSettings.FoodNutrition;
-            radButtonFoodForever.Checked = sim.currentSettings.FoodIsForever;
+            checkBoxFoodForever.Checked = sim.currentSettings.FoodIsForever;
         }
 
         // WIRING OF THE BUTTONS IN THE WIN FORM
@@ -108,7 +108,7 @@ namespace SlimeSimulationV._2
                 sim.currentSettings.FoodEmissionStrength = (float)upDownEmisionRate.Value;
                 sim.currentSettings.DecayRate = (float)upDownDecayRate.Value;
                 sim.currentSettings.FoodNutrition = (int)upDownFoodNutrition.Value;
-                sim.currentSettings.FoodIsForever = radButtonFoodForever.Checked;
+                sim.currentSettings.FoodIsForever = checkBoxFoodForever.Checked;
 
                 foreach (var control in _stopOnlyControls)
                 {
@@ -202,7 +202,7 @@ namespace SlimeSimulationV._2
                 upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
                 upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
                 upDownFoodNutrition.Value = (decimal)sim.currentSettings.FoodNutrition;
-                radButtonFoodForever.Checked = sim.currentSettings.FoodIsForever;
+                checkBoxFoodForever.Checked = sim.currentSettings.FoodIsForever;
             }
         }
     }
