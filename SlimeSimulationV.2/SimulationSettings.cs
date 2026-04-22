@@ -19,5 +19,7 @@ namespace SlimeSimulationV._2
         public float WigglyPathCoeff { get; set; } = 0.05f;
         public float DepositPheromoneAmount { get; set; } = 4f;
         public float FoodEmissionStrength { get; set; } = 200f;
+        public int FoodNutrition { get; set; } = 200;
+        public bool FoodIsForever { get; set; } = false;
     }
 }

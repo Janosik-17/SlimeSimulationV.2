@@ -29,7 +29,7 @@ namespace SlimeSimulationV._2
         /// <summary>
         /// List of all the food sources stored as PointF`s
         /// </summary>
-        public List<PointF> FoodSources { get; set; }
+        public List<FoodSource> FoodSources { get; set; }
 
         /// <summary>
         /// List of all the slime agents
@@ -48,7 +48,7 @@ namespace SlimeSimulationV._2
         {
             FoodTrail = new PheromoneField(width, height);
             HomeTrail = new PheromoneField(width, height);
-            FoodSources = new List<PointF>();
+            FoodSources = new List<FoodSource>();
             Agents = new List<SlimeAgent>();
             currentSettings = new SimulationSettings();
         }
@@ -194,17 +194,30 @@ namespace SlimeSimulationV._2
                             // Flips the searching swith and turns the slime around 
                             slime.IsSearching = false;
                             slime.heading += (float)Math.PI;
+                            // Subtracts one nutrition from the food source it reaches
+                            //if food is foerever it lets is be
+                            food.nutrition -= currentSettings.FoodIsForever ? 0 : 1;
                             break;
+                        }
+
+                        // Checks whether the food source has been eaten completelly                        
+                        if (food.nutrition <= 0)
+                        {
+                            FoodSources.Remove(food);
                         }
                     }
                 }
                 // Check if slime has reached home - if home doesnt exist it keeps running around
+                // Home food source cannot be 'eaten"
                 else if (FoodSources.Count > 0)
                 {
                     var hive = FoodSources[0];
                     if (Math.Abs(slime.X - hive.X) < 4f && (Math.Abs(slime.Y - hive.Y)) < 4f)
                     {
-                        // Flips the searching swith and turns the slime around 
+                        // Flips the searching swith and turns the slime a
+                        //
+                        //
+                        // round 
                         slime.IsSearching = true;
                         slime.heading += (float)Math.PI;
                         break;
@@ -251,7 +264,7 @@ namespace SlimeSimulationV._2
         /// <param name="y">Y coordinate</param>
         public void AddFood(float x, float y)
         {
-            FoodSources.Add(new PointF(x, y));
+            FoodSources.Add(new FoodSource(x, y, currentSettings.FoodNutrition));
         }
 
         /// <summary>

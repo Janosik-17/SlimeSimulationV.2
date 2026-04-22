@@ -38,15 +38,17 @@ namespace SlimeSimulationV._2
                 upDownSlimeSpeed,
                 upDownSmellAngle,
                 upDownSmellDistance,
-                upDownTurningSpeed
+                upDownTurningSpeed,
+                upDownFoodNutrition,
+                radButtonFoodForever
             };
 
             // Sets the renderer to output to pictureBox1
             renderer = new SimRenderer(pictureBox1, WIDTH, HEIGHT);
 
             // Initial render - to display a black screen
-            renderer.Render(sim.FoodTrail,sim.HomeTrail, sim.FoodSources);
-            
+            renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
+
             // Initializes the presets folder
             SettingsManager.InitializePresetsFolder();
 
@@ -60,6 +62,8 @@ namespace SlimeSimulationV._2
             upDownDepositAmount.Value = (decimal)sim.currentSettings.DepositPheromoneAmount;
             upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
             upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
+            upDownFoodNutrition.Value = (decimal)sim.currentSettings.FoodNutrition;
+            radButtonFoodForever.Checked = sim.currentSettings.FoodIsForever;
         }
 
         // WIRING OF THE BUTTONS IN THE WIN FORM
@@ -69,8 +73,8 @@ namespace SlimeSimulationV._2
         {
             if (simTimer.Enabled) return;
 
-            float mx = ((float)e.X/800) * WIDTH;
-            float my = ((float)e.Y/600) * HEIGHT;
+            float mx = ((float)e.X / 800) * WIDTH;
+            float my = ((float)e.Y / 600) * HEIGHT;
 
             if (slimeMode)
             {
@@ -81,7 +85,7 @@ namespace SlimeSimulationV._2
                 sim.AddFood(mx, my);
             }
 
-            renderer.Render(sim.FoodTrail,sim.HomeTrail, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
         }
 
         // Starts and stops the simulation + hides the buttons which are not accessible
@@ -103,6 +107,8 @@ namespace SlimeSimulationV._2
                 sim.currentSettings.DepositPheromoneAmount = (float)upDownDepositAmount.Value;
                 sim.currentSettings.FoodEmissionStrength = (float)upDownEmisionRate.Value;
                 sim.currentSettings.DecayRate = (float)upDownDecayRate.Value;
+                sim.currentSettings.FoodNutrition = (int)upDownFoodNutrition.Value;
+                sim.currentSettings.FoodIsForever = radButtonFoodForever.Checked;
 
                 foreach (var control in _stopOnlyControls)
                 {
@@ -127,7 +133,7 @@ namespace SlimeSimulationV._2
         private void simTimer_Tick(object sender, EventArgs e)
         {
             sim.Step();
-            renderer.Render(sim.FoodTrail,sim.HomeTrail, sim.FoodSources);
+            renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
         }
 
         // Clears everything in the picture box
@@ -136,7 +142,7 @@ namespace SlimeSimulationV._2
             if (!simTimer.Enabled)
             {
                 sim.ClearAll();
-                renderer.Render(sim.FoodTrail,sim.HomeTrail, sim.FoodSources);
+                renderer.Render(sim.FoodTrail, sim.HomeTrail, sim.FoodSources);
             }
         }
 
@@ -195,6 +201,8 @@ namespace SlimeSimulationV._2
                 upDownDepositAmount.Value = (decimal)sim.currentSettings.DepositPheromoneAmount;
                 upDownEmisionRate.Value = (decimal)sim.currentSettings.FoodEmissionStrength;
                 upDownDecayRate.Value = (decimal)sim.currentSettings.DecayRate;
+                upDownFoodNutrition.Value = (decimal)sim.currentSettings.FoodNutrition;
+                radButtonFoodForever.Checked = sim.currentSettings.FoodIsForever;
             }
         }
     }
