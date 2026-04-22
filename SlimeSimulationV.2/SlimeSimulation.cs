@@ -114,6 +114,7 @@ namespace SlimeSimulationV._2
                     trailToFollow = HomeTrail;
                 }
 
+                // Finds the new way which the agent should turn
                 var angleCenter = slime.heading;
                 var angleRight = slime.heading - currentSettings.SmellAngle / 2;
                 var angleLeft = slime.heading + currentSettings.SmellAngle / 2;
@@ -133,6 +134,7 @@ namespace SlimeSimulationV._2
                     slime.Y + (float)Math.Sin(angleLeft) * currentSettings.SmellDistance
                     );
 
+                // Turn the agent in the correct direction
                 if (smellLeft > smellRight && smellLeft > smellCenter)
                 {
                     slime.heading += currentSettings.TurningSpeed;
@@ -223,7 +225,8 @@ namespace SlimeSimulationV._2
         /// <param name="ammount">The total ammount of new agents to be added</param>
         public void AddSlimeBlob(float x, float y, int radius, int ammount)
         {
-            // Deposits the 'ammount' number of slimes
+            // Deposits the 'ammount' number of slimes in 
+            // random places inside of a circle
             for (int i = 0; i < ammount; i++)
             {
                 float angle = (float)(RNG.NextDouble() * Math.PI * 2);

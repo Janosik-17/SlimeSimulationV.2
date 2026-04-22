@@ -161,6 +161,7 @@ namespace SlimeSimulationV._2
             }
         }
 
+        // Saves settings to a json file
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
             using SaveFileDialog dialog = new SaveFileDialog
@@ -173,6 +174,7 @@ namespace SlimeSimulationV._2
                 SettingsManager.Save(sim.currentSettings, dialog.FileName);
         }
 
+        // Loads settings from a file
         private void btnLoadSettings_Click(object sender, EventArgs e)
         {
             using OpenFileDialog dialog = new OpenFileDialog

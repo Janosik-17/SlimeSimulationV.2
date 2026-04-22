@@ -28,10 +28,8 @@ namespace SlimeSimulationV._2
         /// </summary>
         public int Height { get; }
 
-        /// <summary>
-        /// Indexer for the Pheromone field
-        /// </summary>
-        /// <returns>The value of the pheromone at [x, y] of the current field</returns>
+        // Indexer for the Pheromone field returns 
+        // the value of the pheromone at [x, y] of the current field
         public float this[int x, int y] => current[x, y];
 
         /// <summary>
@@ -74,17 +72,19 @@ namespace SlimeSimulationV._2
             int cx = (int)x;
             int cy = (int)y;
 
+            // Holds the maximum value lover than 255
             current[cx, cy] = Math.Min(255, current[cx, cy] + ammount);
         }
 
         /// <summary>
-        /// Applies a simple 3x3 box blur to all pixels in pheromone field and dereases their value  
+        /// Applies a simple 3x3 box blur to all pixels in pheromone field and dereases their value
+        /// Uses a Parallel.For loop to speed up the process for larger simulations
         /// </summary>
         /// <param name="decayRate">Decay rate of the pheromone from (0, 1)</param>
         public void DiffuseAndDecay(float decayRate)
         {
             // 1. Compute blurred + decayed values into the NEXT buffer
-            for (int x = 1; x < Width - 1; x++)
+            Parallel.For(1, Width - 1, x =>
             {
                 for (int y = 1; y < Height - 1; y++)
                 {
@@ -98,18 +98,21 @@ namespace SlimeSimulationV._2
                     sum += current[x - 1, y + 1] * 0.025f;
                     sum += current[x + 1, y + 1] * 0.025f;
 
-                    next[x, y] = sum * decayRate;
+                    next[x, y] = Math.Min(255, sum * decayRate);
                 }
-            }
+            });
+
+
+
 
             // 2. Copy the NEW values back to the main field
-            for (int x = 0; x < Width; x++)
+            Parallel.For(1, Width, x =>
             {
                 for (int y = 0; y < Height; y++)
                 {
                     current[x, y] = next[x, y];
                 }
-            }
+            });
         }
 
         /// <summary>
